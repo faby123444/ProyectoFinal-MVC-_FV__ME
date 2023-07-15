@@ -20,11 +20,27 @@ namespace ProyectoFinal_MVC__FV__ME.Controllers
         }
 
         // GET: Registro_F
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string buscar, int filtro)
         {
-              return _context.Registro_F != null ? 
-                          View(await _context.Registro_F.ToListAsync()) :
-                          Problem("Entity set 'ProyectoFinal_MVC__FV__MEContext.Registro_F'  is null.");
+            var registro_F = from Registro_F in _context.Registro_F select Registro_F;
+
+            if (!String.IsNullOrEmpty(buscar))
+            {
+                registro_F = registro_F.Where(s => s.Materia!.Contains(buscar));
+            }
+
+            if (filtro != 0)
+            {
+                registro_F = registro_F.Where(s => s.Calificacion == filtro);
+                ViewData["FiltroCalificacion"] = filtro;
+            }
+            else
+            {
+                ViewData["FiltroCalificacion"] = null;
+            }
+            registro_F = registro_F.OrderByDescending(s => s.Calificacion);
+
+            return View(await registro_F.ToListAsync());
         }
 
         // GET: Registro_F/Details/5
