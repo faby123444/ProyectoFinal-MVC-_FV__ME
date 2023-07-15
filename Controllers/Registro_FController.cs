@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +20,7 @@ namespace ProyectoFinal_MVC__FV__ME.Controllers
             _context = context;
         }
 
-        // GET: Registro_F
+        [Authorize]
         public async Task<IActionResult> Index(string buscar, int filtro)
         {
             var registro_F = from Registro_F in _context.Registro_F select Registro_F;
@@ -43,6 +44,7 @@ namespace ProyectoFinal_MVC__FV__ME.Controllers
             return View(await registro_F.ToListAsync());
         }
 
+        [Authorize]
         // GET: Registro_F/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -61,29 +63,8 @@ namespace ProyectoFinal_MVC__FV__ME.Controllers
             return View(registro_F);
         }
 
-        // GET: Registro_F/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
 
-        // POST: Registro_F/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Semestre,Materia,Profesor,Calificacion,Descripcion,Cualidad,Horario")] Registro_F registro_F)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(registro_F);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(registro_F);
-        }
-
-        // GET: Registro_F/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Registro_F == null)
@@ -99,9 +80,7 @@ namespace ProyectoFinal_MVC__FV__ME.Controllers
             return View(registro_F);
         }
 
-        // POST: Registro_F/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Semestre,Materia,Profesor,Calificacion,Descripcion,Cualidad,Horario")] Registro_F registro_F)
@@ -133,8 +112,7 @@ namespace ProyectoFinal_MVC__FV__ME.Controllers
             }
             return View(registro_F);
         }
-
-        // GET: Registro_F/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Registro_F == null)
@@ -152,7 +130,7 @@ namespace ProyectoFinal_MVC__FV__ME.Controllers
             return View(registro_F);
         }
 
-        // POST: Registro_F/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -166,14 +144,14 @@ namespace ProyectoFinal_MVC__FV__ME.Controllers
             {
                 _context.Registro_F.Remove(registro_F);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool Registro_FExists(int id)
         {
-          return (_context.Registro_F?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Registro_F?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
